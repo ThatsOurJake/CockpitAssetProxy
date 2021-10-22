@@ -24,7 +24,8 @@
     "build": "tsc",
     "lint": "tslint -c tslint.json src/**/*.ts",
     "prepublish": "npm run build",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "start": "node lib/index.js"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",
