@@ -5,7 +5,7 @@ import cors from '@koa/cors';
 
 import config from './config';
 import logger from './logger';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const app = new Koa();
 const router = new Router();
@@ -36,17 +36,9 @@ router.get('/image', async ctx => {
     ctx.res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     ctx.body = data;
     ctx.status = 200;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      ctx.status = error.response!.status;
-      ctx.body = error.response!.data;
-      logger.error('Proxy Failed', { res: error.response });
-    } else {
-      const err = error as Error;
-      ctx.status = 400;
-      ctx.body = err.message;
-      logger.error(`Proxy Failed: ${err.message}`);
-    }
+  } catch (err) {
+    const error = err as AxiosError;
+    logger.error(`Proxy Failed: ${error.message}`, { res: error.response, req: error.request });
   }
 });
 
